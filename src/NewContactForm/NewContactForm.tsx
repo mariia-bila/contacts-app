@@ -1,27 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, SyntheticEvent } from 'react';
 import { Contact } from '../types/Contact';
 
 type Props = {
   addContact: (contact:Contact) => void;
-  hideForm: (contact:Contact) => void;
+  hideForm: () => void;
 }
 
 const NewContactForm: React.FC<Props> = ({ addContact, hideForm }) => {
 
-  const useInput = (initial, required) => {
+  const useInput = (initial:string, required:boolean) => {
     const [value, setValue] = useState(initial);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<null | string>(null);
   
     return {
       value,
-      onBlur: (event) => {
+      onBlur: (event: React.ChangeEvent<HTMLInputElement>) => {
         if (!event.target.value && required){
           setError("Required field");
         } else {
           setError(null);
         }
       },
-      onChange: event => setValue(event.target.value),
+      onChange: (event:React.ChangeEvent<HTMLInputElement>) => setValue(event.target.value),
       error
     };
   };
@@ -32,7 +32,7 @@ const NewContactForm: React.FC<Props> = ({ addContact, hideForm }) => {
   const tel = useInput('', false);
   const dateOfBirth = useInput('', false);
 
-  const addNewContact = (event) => {
+  const addNewContact = (event:SyntheticEvent) => {
     event.preventDefault()
     addContact({name: name.value, surname: surname.value, email: email.value, tel: tel.value, dateOfBirth:dateOfBirth.value, id: +new Date() })
     hideForm()

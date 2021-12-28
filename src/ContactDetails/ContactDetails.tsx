@@ -1,11 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState, SyntheticEvent} from 'react';
 import { ConfirmationWindow } from '../ConfirmationWindow/ConfirmationWindow';
 import { Contact } from '../types/Contact';
 
 type Props = {
   selectedContact: Contact;
   toggleDetailsPage: () => void;
-  editContact: (contact:Contact) => void;
+  editContact: (currentContact:Contact, changedContact:Contact) => void;
 }
 
 export const ContactDetails: React.FC<Props> = ({ selectedContact, toggleDetailsPage, editContact }) => {
@@ -29,19 +29,19 @@ export const ContactDetails: React.FC<Props> = ({ selectedContact, toggleDetails
     hideConfirmation();
   }
 
-  const closeAndSave = (event) => {
+  const closeAndSave = (event:SyntheticEvent) => {
     event.preventDefault();
     editContact(selectedContact, {...currentContact, id: selectedContact.id});
     toggleDetailsPage();
   };
 
-  const undo = (event) => {
+  const undo = (event:SyntheticEvent) => {
     event.preventDefault();
     setCurrentContact(contactBackup)
     setFields(Object.entries(contactBackup))
   };
 
-  const deleteField = (event, key) => {
+  const deleteField = (event:SyntheticEvent, key:string) => {
     event.preventDefault();
     setContactBackup({...currentContact})
     setFields(fields.filter(el => el[0] !== key))
@@ -50,17 +50,17 @@ export const ContactDetails: React.FC<Props> = ({ selectedContact, toggleDetails
     setCurrentContact({...currentContact, [key]: null})
   };
 
-  const changeInfo = (event, key) => {
+  const changeInfo = (event:React.ChangeEvent<HTMLInputElement>, key:string) => {
     setCurrentContact({...currentContact, [key]:event.target.value})
   };
 
-  const confirmChanges = (event) => {
+  const confirmChanges = (event:SyntheticEvent) => {
     event.preventDefault()
     setConfirmationIsVisible(true)
     setInputsDisabled(true)
   };
 
-  const addNewField = (event) =>{
+  const addNewField = (event:SyntheticEvent) =>{
     event.preventDefault();
     setCurrentContact({...currentContact, [newField]: newFieldValue })
     setNewFieldValue('')
@@ -81,8 +81,8 @@ export const ContactDetails: React.FC<Props> = ({ selectedContact, toggleDetails
           Undo
         </button>
 
-        {fields.map(field => {
-          const key = field[0];
+        {fields.map((field) => {
+          const key = field[0] as keyof Contact;
 
           if (key !== 'id' && field[1]) {
             return (

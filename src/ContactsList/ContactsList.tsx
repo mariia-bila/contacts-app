@@ -1,18 +1,18 @@
-import React, {useState} from 'react';
+import React, {useState, SyntheticEvent} from 'react';
 import { ConfirmationWindow } from '../ConfirmationWindow/ConfirmationWindow';
 import { Contact } from '../types/Contact';
 
 
 type Props = {
   contacts: Contact[];
-  deleteContact: (contact:Contact) => void;
+  deleteContact: (contact?:Contact) => void;
   selectContact: (contact:Contact) => void;
   toggleDetailsPage: () => void;
 };
 
 const ContactsList: React.FC<Props> = ({ contacts, deleteContact, toggleDetailsPage, selectContact }) => {
   const [confirmationIsVisible, setConfirmationIsVisible] = useState(false);
-  const [contactToDelete, setContactToDelete] = useState(null);
+  const [contactToDelete, setContactToDelete] = useState<null | Contact>(null);
   const [inputsDisabled, setInputsDisabled] = useState(false);
 
   const hideConfirmation = () => {
@@ -20,14 +20,14 @@ const ContactsList: React.FC<Props> = ({ contacts, deleteContact, toggleDetailsP
     setInputsDisabled(false);
   };
 
-  const deleteItem = (event, contact) => {
+  const deleteItem = (event:SyntheticEvent, contact:Contact) => {
     event.preventDefault();
     setConfirmationIsVisible(true)
     setContactToDelete({...contact})
     setInputsDisabled(true)
   };
 
-  const getDetails = (event, contact) => {
+  const getDetails = (event:SyntheticEvent, contact:Contact) => {
     event.preventDefault();
     toggleDetailsPage();
     selectContact(contact);
@@ -74,7 +74,7 @@ const ContactsList: React.FC<Props> = ({ contacts, deleteContact, toggleDetailsP
         ))}
       </ul>
 
-      {confirmationIsVisible && (
+      {confirmationIsVisible && contactToDelete && (
         <ConfirmationWindow
           reject={hideConfirmation}
           submit={deleteContact}
