@@ -1,33 +1,34 @@
 import React, {useState} from 'react';
-import './App.scss';
+import './styles/blocks/App.scss';
 import { ContactDetails } from './ContactDetails/ContactDetails';
 import ContactsList from './ContactsList/ContactsList';
 import NewContactForm from './NewContactForm/NewContactForm';
 
+const useLocalStorage = (key, initialValue) => {
+  const [value, setValue] = useState(JSON.parse(localStorage.getItem(key)) || initialValue)
 
-const contact0 = {
-  id: 0,
-  contactName: '',
-  surname:'',
-  email:'',
-  tel: '',
-  dateOfBirth: '',
+  const save = (value) => {
+    setValue(value);
+    localStorage.setItem(key, JSON.stringify(value));
+  };
+
+  return [value, save];
 }
 
 function App() {
-  const [contacts, setContacts] = useState([]);
   const [detailsIsShown, setDetailsIsShown] = useState(false);
   const [formIsShown, setFormIsShown] = useState(false);
-  const [selectedContact, setSelectedContact] = useState(contact0); /*should work with null */
+  const [selectedContact, setSelectedContact] = useState(null);
+  const [contacts, setContacts] = useLocalStorage('contacts', []);
 
   const addContact = (contact) => {
-    setContacts([contact, ...contacts])
-    // localStorage.setItem(contact.id, JSON.stringify(contacts))
+    setContacts([contact, ...contacts]);
+    localStorage.setItem(contact.id, JSON.stringify(contacts));
   };
 
   const deleteContact = (contact) => {
-    setContacts(contacts.filter(el => el.id !== contact.id))
-    // localStorage.removeItem(contact.id, JSON.stringify(contacts))
+    setContacts(contacts.filter(el => el.id !== contact.id));
+    localStorage.removeItem(contact.id, JSON.stringify(contacts));
   };
 
   const editContact = (currentContact, changedContact) => {
@@ -35,27 +36,32 @@ function App() {
      if ( el.id !== currentContact.id) {
        return el;
      };
-    //  setSelectedContact(contact2)
+
      return changedContact;
-    }))
-    // localStorage.removeItem(contact.id, JSON.stringify(contacts))
+    }));
+
+    localStorage.removeItem(currentContact.id, JSON.stringify(contacts));
+    localStorage.setItem(changedContact.id, JSON.stringify(contacts));
   };
 
   const toggleDetailsPage = () => {
-    setDetailsIsShown(!detailsIsShown)
+    setDetailsIsShown(!detailsIsShown);
   };
 
   const selectContact = (contact) => {
-    setSelectedContact(contact)
+    setSelectedContact(contact);
   };
 
   const hideForm = () => {
-    setFormIsShown(false)
+    setFormIsShown(false);
   };
 
   return (
     <div className="App">
-      <h1 className="title">My contact list</h1>
+      <h1 className="App__title">My contact list</h1>
+
+      {contacts.length === 0 && ('No contacts yet')}
+
       {!detailsIsShown && (
         <ContactsList
           contacts={contacts}
@@ -72,14 +78,15 @@ function App() {
           editContact={editContact}
         />)}
 
-      {formIsShown && (<NewContactForm addContact={addContact} hideForm={hideForm} />)}
+      {formIsShown && !detailsIsShown && (<NewContactForm addContact={addContact} hideForm={hideForm} />)}
 
-      <button
+      {!detailsIsShown && (
+        <button
           className="button"
           onClick={()=> setFormIsShown(!formIsShown)}
-        >
+      >
           {!formIsShown ? ('+  Add contact') : ('Cancel')}
-        </button>
+      </button>)}
     </div>
   );
 }

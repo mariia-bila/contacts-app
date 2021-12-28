@@ -1,0 +1,28 @@
+.button {
+    box-sizing: border-box;
+    margin: 0 auto;
+    background-color: $color-creamy;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 130%;
+    color: $color-green;
+    padding-bottom: 9px;
+    width: max-content;
+    border: none;
+    border-bottom: 2px solid transparent;
+    transition: color 0.3s, border-color 0.3s;
+
+    &:hover {
+      border-color: $color-black;
+      &:disabled {
+        border-color: $color-creamy;
+      }
+    }
+
+    @include onDesktop {
+      font-size: 20px;
+      padding-bottom: 12px;
+    }
+  }  
+

@@ -1,0 +1,66 @@
+.form {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  
+  &--wide {
+    width: 500px;
+  }
+
+  &__field {
+    display: block;
+    width: 100%;
+    border-style: none;
+    border-bottom: 1px solid $color-light-grey;
+    background-color: $color-creamy;
+    color: $color-green;
+
+    font-size: 20px;
+    line-height: 150%;
+    text-transform: capitalize;
+    color: $color-dark-grey;
+
+    padding-bottom: 5px;
+    margin-bottom: 25px;
+
+    @include onDesktop {
+      padding-bottom: 10px;
+      margin-bottom: 30px;
+    
+      font-weight: 500;
+      font-size: 18px;
+    }
+
+    &::placeholder {
+      color: $color-dark-grey;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 18px;
+      font-weight: normal;
+      line-height: 150%;
+      text-transform:none;
+
+      @include Tablet {
+        font-size: 14px;
+        font-weight: 500;
+      }
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $color-black;
+      
+      &:valid {
+        border-color: $color-green;
+      }
+    }
+
+    &:-webkit-autofill,
+     &:-webkit-autofill:hover,
+     &:-webkit-autofill:focus,
+     &:-webkit-autofill:active {
+       background-clip: text;
+       -webkit-background-clip: text;
+       -webkit-text-fill-color: $color-green;
+     }
+  }
+}

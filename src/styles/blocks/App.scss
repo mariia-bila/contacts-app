@@ -1,0 +1,24 @@
+@import '../utils/mixins';
+@import '../utils/vars';
+@import '../utils/reset.scss';
+
+@import '../blocks/button.scss';
+@import '../blocks/form.scss';
+@import '../blocks/card.scss';
+@import '../blocks/list.scss';
+@import '../blocks/confirmation.scss';
+
+body {
+  background-color: $color-creamy;
+  margin: 50px;
+}
+.App {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__title {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+};
